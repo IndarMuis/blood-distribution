@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "634528086205",
+    "project_id": "blood-distribution",
+    "storage_bucket": "blood-distribution.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634528086205:android:f7ad6fdb4b32283f3e9fd4",
+        "android_client_info": {
+          "package_name": "com.blooddistribution.blood_distirbution"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634528086205-s2655eip6m0acpg6v4t6mmh2kf7a61nm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCC1lZRzz9DROcht6mNbJzPb2zUnoEx0T0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "634528086205-s2655eip6m0acpg6v4t6mmh2kf7a61nm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
