@@ -1,14 +1,18 @@
+import 'package:blood_distirbution/app/data/models/user_model.dart';
+import 'package:blood_distirbution/app/modules/home/controllers/home_controller.dart';
 import 'package:blood_distirbution/app/routes/app_pages.dart';
 import 'package:blood_distirbution/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 
-class AppbarHome extends StatelessWidget {
+class AppbarHome extends GetView<HomeController> {
   const AppbarHome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Widget userCard() {
+    Widget userCard(String username) {
       return Container(
         height: 90,
         width: double.infinity,
@@ -19,17 +23,21 @@ class AppbarHome extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  "Hello, Indar",
+                  "Hello,  ${username}",
                   style: primaryTextStyle.copyWith(
                       fontSize: 25, color: Colors.white, fontWeight: light),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
               GestureDetector(
-                onTap: () {
-                  Get.toNamed(Routes.PROFILE);
-                },
-                child: Image.asset("assets/user.png", height: 55, width: 55,)),
+                  onTap: () {
+                    Get.toNamed(Routes.PROFILE);
+                  },
+                  child: Image.asset(
+                    "assets/user.png",
+                    height: 55,
+                    width: 55,
+                  )),
             ],
           ),
         ),
@@ -37,10 +45,14 @@ class AppbarHome extends StatelessWidget {
     }
 
     Widget title() {
-      return Column(
-        children: [
-        Image.asset("assets/logo.png", width: 110,),
-        SizedBox(height: 10,),
+      return Column(children: [
+        Image.asset(
+          "assets/logo.png",
+          width: 110,
+        ),
+        SizedBox(
+          height: 10,
+        ),
         Text(
           "DONATE BLOOD",
           style: primaryTextStyle.copyWith(
@@ -71,13 +83,21 @@ class AppbarHome extends StatelessWidget {
                     primaryColor.withOpacity(0.7),
                   ])),
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            userCard(),
-            title()
-          ],
-        )
+        FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            future: controller.getData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+              if (snapshot.hasData) {
+                Map<String, dynamic> user = snapshot.data!.data()!;
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [userCard("${user['username']}"), title()],
+                );
+              }
+              return CircularProgressIndicator();
+            })
       ],
     );
   }

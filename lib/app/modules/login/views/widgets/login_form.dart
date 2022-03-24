@@ -1,9 +1,10 @@
+import 'package:blood_distirbution/app/modules/login/controllers/login_controller.dart';
 import 'package:blood_distirbution/app/routes/app_pages.dart';
 import 'package:blood_distirbution/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends GetView<LoginController> {
   const LoginForm({Key? key}) : super(key: key);
 
   @override
@@ -12,12 +13,15 @@ class LoginForm extends StatelessWidget {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
           "Username",
-          style: primaryTextStyle.copyWith(fontSize: 20, ),
+          style: primaryTextStyle.copyWith(
+            fontSize: 20,
+          ),
         ),
         SizedBox(
           height: 8,
         ),
         TextField(
+          controller: controller.inputEmail,
           decoration: InputDecoration(
             hintText: "Your username....",
             hintStyle: primaryTextStyle.copyWith(fontWeight: light),
@@ -34,12 +38,15 @@ class LoginForm extends StatelessWidget {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
           "Password",
-          style: primaryTextStyle.copyWith(fontSize: 20, ),
+          style: primaryTextStyle.copyWith(
+            fontSize: 20,
+          ),
         ),
         SizedBox(
           height: 8,
         ),
         TextField(
+          controller: controller.inputPassword,
           obscureText: true,
           decoration: InputDecoration(
             hintText: "Your Password....",
@@ -62,8 +69,8 @@ class LoginForm extends StatelessWidget {
                 primary: successColor,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25))),
-            onPressed: () {
-              Get.offAllNamed(Routes.HOME);
+            onPressed: () async {
+              controller.login();
             },
             child: Text(
               "Login",
@@ -77,15 +84,20 @@ class LoginForm extends StatelessWidget {
       return Column(
         children: [
           Text("You don't have an account?",
-              style:
-                  primaryTextStyle.copyWith(fontSize: 16, fontWeight: light, fontStyle: FontStyle.italic)),
+              style: primaryTextStyle.copyWith(
+                  fontSize: 16,
+                  fontWeight: light,
+                  fontStyle: FontStyle.italic)),
           GestureDetector(
             onTap: () {
               Get.toNamed(Routes.REGISTER);
             },
             child: Text("Sign Up",
                 style: primaryTextStyle.copyWith(
-                    fontSize: 16, fontWeight: bold, color: successColor,)),
+                  fontSize: 16,
+                  fontWeight: bold,
+                  color: successColor,
+                )),
           )
         ],
       );
@@ -96,11 +108,12 @@ class LoginForm extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: defaultMargin),
       // height: MediaQuery.of(context).size.height / 3,
       width: double.infinity,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(color: successColor, blurRadius: 4, ),
-        ],
-          color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+          color: successColor,
+          blurRadius: 4,
+        ),
+      ], color: Colors.white, borderRadius: BorderRadius.circular(20)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

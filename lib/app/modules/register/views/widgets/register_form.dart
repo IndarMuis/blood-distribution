@@ -1,10 +1,12 @@
+import 'package:blood_distirbution/app/modules/register/controllers/register_controller.dart';
 import 'package:blood_distirbution/app/routes/app_pages.dart';
 import 'package:blood_distirbution/theme.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
-class RegisterForm extends StatelessWidget {
+class RegisterForm extends GetView<RegisterController> {
   const RegisterForm({Key? key}) : super(key: key);
 
   @override
@@ -13,14 +15,22 @@ class RegisterForm extends StatelessWidget {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
           "Nama Lengkap",
-          style: primaryTextStyle.copyWith(fontSize: 20, ),
+          style: primaryTextStyle.copyWith(
+            fontSize: 20,
+          ),
         ),
         SizedBox(
           height: 8,
         ),
-        TextField(
+        TextFormField(
+          controller: controller.inputNamaLengkap,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "Form must be filled";
+            }
+          },
           decoration: InputDecoration(
-            hintText: "nama lengkap....",
+            hintText: "..........",
             hintStyle: primaryTextStyle.copyWith(fontWeight: light),
             contentPadding: EdgeInsets.all(defaultMargin),
             border: OutlineInputBorder(
@@ -31,18 +41,21 @@ class RegisterForm extends StatelessWidget {
       ]);
     }
 
-    Widget tempatTanggalLahirInput() {
+    Widget tempatLahir() {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
-          "Tempat, tanggal lahir",
-          style: primaryTextStyle.copyWith(fontSize: 20, ),
+          "Tempat Lahir",
+          style: primaryTextStyle.copyWith(
+            fontSize: 20,
+          ),
         ),
         SizedBox(
           height: 8,
         ),
         TextField(
+          controller: controller.inputTempatLahir,
           decoration: InputDecoration(
-            hintText: "tempat tanggal lahir....",
+            hintText: "..........",
             hintStyle: primaryTextStyle.copyWith(fontWeight: light),
             contentPadding: EdgeInsets.all(defaultMargin),
             border: OutlineInputBorder(
@@ -50,6 +63,47 @@ class RegisterForm extends StatelessWidget {
             ),
           ),
         ),
+      ]);
+    }
+
+    Widget tanggalLahir() {
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          "Tanggal Lahir",
+          style: primaryTextStyle.copyWith(
+            fontSize: 20,
+          ),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Obx(() => TextField(
+              readOnly: true,
+              onTap: () async {
+                DateTime? date = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(1960),
+                    lastDate: DateTime.now());
+
+                if (date != null) {
+                  print(
+                      date); //pickedDate output format => 2021-03-10 00:00:00.000
+                  String getDate = DateFormat('dd-MM-yyyy').format(date);
+                  controller.inputTanggalLahir.value = getDate;
+                }
+              },
+              decoration: InputDecoration(
+                hintStyle: primaryTextStyle.copyWith(fontWeight: light),
+                contentPadding: EdgeInsets.all(defaultMargin),
+                hintText: controller.inputTanggalLahir.value.isEmpty
+                    ? 'Tap Here'
+                    : controller.inputTanggalLahir.value,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+            )),
       ]);
     }
 
@@ -57,7 +111,9 @@ class RegisterForm extends StatelessWidget {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
           "Golongan Darah",
-          style: primaryTextStyle.copyWith(fontSize: 20, ),
+          style: primaryTextStyle.copyWith(
+            fontSize: 20,
+          ),
         ),
         SizedBox(
           height: 8,
@@ -66,11 +122,11 @@ class RegisterForm extends StatelessWidget {
           mode: Mode.DIALOG,
           showClearButton: true,
           onChanged: (value) {
-            print(value);
+            controller.inputGolonganDarah.value = value.toString();
           },
           items: ["A", "B", "AB", "O"],
           dropdownSearchDecoration: InputDecoration(
-              hintText: "Golongan Darah",
+              hintText: "Tap Here",
               contentPadding:
                   EdgeInsets.symmetric(vertical: 8, horizontal: defaultMargin),
               border:
@@ -79,18 +135,46 @@ class RegisterForm extends StatelessWidget {
       ]);
     }
 
-    Widget usernameInput() {
+    Widget emailInput() {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
-          "Username",
-          style: primaryTextStyle.copyWith(fontSize: 20, ),
+          "Email",
+          style: primaryTextStyle.copyWith(
+            fontSize: 20,
+          ),
         ),
         SizedBox(
           height: 8,
         ),
         TextField(
+          controller: controller.inputEmail,
           decoration: InputDecoration(
-            hintText: "Your username....",
+            hintText: "..........",
+            hintStyle: primaryTextStyle.copyWith(fontWeight: light),
+            contentPadding: EdgeInsets.all(defaultMargin),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+        ),
+      ]);
+    }
+
+    Widget usernameInput() {
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          "Username",
+          style: primaryTextStyle.copyWith(
+            fontSize: 20,
+          ),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        TextField(
+          controller: controller.inputUsername,
+          decoration: InputDecoration(
+            hintText: "..........",
             hintStyle: primaryTextStyle.copyWith(fontWeight: light),
             contentPadding: EdgeInsets.all(defaultMargin),
             border: OutlineInputBorder(
@@ -105,15 +189,18 @@ class RegisterForm extends StatelessWidget {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
           "Password",
-          style: primaryTextStyle.copyWith(fontSize: 20, ),
+          style: primaryTextStyle.copyWith(
+            fontSize: 20,
+          ),
         ),
         SizedBox(
           height: 8,
         ),
         TextField(
+          controller: controller.inputPassword,
           obscureText: true,
           decoration: InputDecoration(
-            hintText: "Your Password....",
+            hintText: "..........",
             hintStyle: primaryTextStyle.copyWith(fontWeight: light),
             contentPadding: EdgeInsets.all(defaultMargin),
             border: OutlineInputBorder(
@@ -133,8 +220,8 @@ class RegisterForm extends StatelessWidget {
                 primary: blueColor,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25))),
-            onPressed: () {
-              Get.toNamed(Routes.HOME);
+            onPressed: () async {
+              controller.addUser();
             },
             child: Text(
               "Register",
@@ -144,7 +231,7 @@ class RegisterForm extends StatelessWidget {
       );
     }
 
-    Widget gotoSignUp() {
+    Widget gotoSign() {
       return Column(
         children: [
           Text("Do you already have an account?",
@@ -169,7 +256,8 @@ class RegisterForm extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: defaultMargin, vertical: 40),
-      margin: EdgeInsets.only(left: defaultMargin, right: defaultMargin, bottom: 30),
+      margin: EdgeInsets.only(
+          left: defaultMargin, right: defaultMargin, bottom: 30),
       // height: MediaQuery.of(context).size.height / 3,
       width: double.infinity,
       decoration: BoxDecoration(boxShadow: [
@@ -185,11 +273,19 @@ class RegisterForm extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          tempatTanggalLahirInput(),
+          tempatLahir(),
+          SizedBox(
+            height: 20,
+          ),
+          tanggalLahir(),
           SizedBox(
             height: 20,
           ),
           golonganDarahInput(),
+          SizedBox(
+            height: 20,
+          ),
+          emailInput(),
           SizedBox(
             height: 20,
           ),
@@ -205,7 +301,7 @@ class RegisterForm extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          gotoSignUp()
+          gotoSign()
         ],
       ),
     );

@@ -1,9 +1,13 @@
+import 'package:blood_distirbution/app/data/models/user_model.dart';
+import 'package:blood_distirbution/app/modules/profile/controllers/profile_controller.dart';
 import 'package:blood_distirbution/app/routes/app_pages.dart';
 import 'package:blood_distirbution/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 
-class AppbarProfile extends StatelessWidget {
+class AppbarProfile extends GetView<ProfileController> {
   const AppbarProfile({Key? key}) : super(key: key);
 
   @override
@@ -21,6 +25,7 @@ class AppbarProfile extends StatelessWidget {
               GestureDetector(
                   onTap: () {
                     Get.back();
+                    ;
                   },
                   child: Icon(
                     Icons.arrow_back_ios,
@@ -32,6 +37,7 @@ class AppbarProfile extends StatelessWidget {
                     // Get.offAndToNamed(Routes.LOGIN);
                     Get.defaultDialog(
                       onConfirm: () {
+                        controller.auth.signOut();
                         Get.offAndToNamed(Routes.LOGIN);
                       },
                       onCancel: () {},
@@ -60,7 +66,7 @@ class AppbarProfile extends StatelessWidget {
       );
     }
 
-    Widget title() {
+    Widget title(String namaLengkap) {
       return Column(children: [
         Image.asset(
           "assets/user.png",
@@ -70,7 +76,7 @@ class AppbarProfile extends StatelessWidget {
           height: 10,
         ),
         Text(
-          "Ismunandar Muis",
+          "${namaLengkap}",
           style: primaryTextStyle.copyWith(
               color: Colors.white, fontSize: 25, fontWeight: extraBold),
         ),
@@ -93,9 +99,19 @@ class AppbarProfile extends StatelessWidget {
                     primaryColor.withOpacity(0.7),
                   ])),
         ),
-        Column(
-          children: [actionButton(), title()],
-        )
+        FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            future: controller.main(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var user = snapshot.data!.data()!;
+                return Column(
+                  children: [actionButton(), title("${user['namaLengkap']}")],
+                );
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            })
       ],
     );
   }

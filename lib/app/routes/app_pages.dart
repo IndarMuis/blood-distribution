@@ -1,4 +1,4 @@
-import 'package:blood_distirbution/app/modules/profile/bindings/setting_binding.dart';
+import 'package:blood_distirbution/app/modules/profile/bindings/profile_binding.dart';
 import 'package:get/get.dart';
 
 import 'package:blood_distirbution/app/modules/blood_donor/bindings/blood_donor_binding.dart';

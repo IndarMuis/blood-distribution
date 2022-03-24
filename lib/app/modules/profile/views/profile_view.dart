@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../controllers/setting_controller.dart';
+import '../controllers/profile_controller.dart';
 import 'widgets/appbar_profile.dart';
 
 class ProfileView extends GetView<ProfileController> {

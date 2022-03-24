@@ -1,15 +1,19 @@
+import 'package:blood_distirbution/app/data/models/user_model.dart';
 import 'package:blood_distirbution/app/modules/home/views/widgets/card_menu.dart';
+import 'package:blood_distirbution/app/modules/profile/controllers/profile_controller.dart';
 import 'package:blood_distirbution/app/routes/app_pages.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 
 import '../../../../../theme.dart';
 
-class ContentProfile extends StatelessWidget {
+class ContentProfile extends GetView<ProfileController> {
   const ContentProfile({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    Widget fullName() {
+    Widget fullName(String fullName) {
       return Container(
         margin: EdgeInsets.only(bottom: 15),
         child: Column(
@@ -37,7 +41,7 @@ class ContentProfile extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Ismunandar Muis",
+                  "${fullName}",
                   style: primaryTextStyle.copyWith(
                       fontSize: 18, fontWeight: medium),
                 ),
@@ -48,7 +52,7 @@ class ContentProfile extends StatelessWidget {
       );
     }
 
-    Widget tanggalLahir() {
+    Widget tanggalLahir(String tanggalLahir) {
       return Container(
         margin: EdgeInsets.only(bottom: 15),
         child: Column(
@@ -76,7 +80,7 @@ class ContentProfile extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Makassar, 03-11-2000",
+                  "${tanggalLahir}",
                   style: primaryTextStyle.copyWith(
                       fontSize: 18, fontWeight: medium),
                 ),
@@ -87,7 +91,7 @@ class ContentProfile extends StatelessWidget {
       );
     }
 
-    Widget golonganDarah() {
+    Widget golonganDarah(String golonganDarah) {
       return Container(
         margin: EdgeInsets.only(bottom: 15),
         child: Column(
@@ -115,7 +119,7 @@ class ContentProfile extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "A",
+                  "${golonganDarah}",
                   style: primaryTextStyle.copyWith(
                       fontSize: 18, fontWeight: medium),
                 ),
@@ -126,7 +130,7 @@ class ContentProfile extends StatelessWidget {
       );
     }
 
-    Widget username() {
+    Widget username(String user) {
       return Container(
         margin: EdgeInsets.only(bottom: 15),
         child: Column(
@@ -154,7 +158,7 @@ class ContentProfile extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "indarMuis",
+                  "${user}",
                   style: primaryTextStyle.copyWith(
                       fontSize: 18, fontWeight: medium),
                 ),
@@ -226,21 +230,42 @@ class ContentProfile extends StatelessWidget {
         padding: EdgeInsets.only(
             bottom: defaultMargin, left: defaultMargin, right: defaultMargin),
         color: backgroundColor,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 25,
-            ),
-            fullName(),
-            tanggalLahir(),
-            golonganDarah(),
-            username(),
-            password(),
-            SizedBox(
-              height: 20,
-            ),
-            updateButton()
-          ],
-        ));
+        child: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            future: controller.main(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.hasData) {
+                Map<String, dynamic>? user = snapshot.data!.data()!;
+                print(user['username']);
+                print(user['tanggalLahir']);
+                print(user['golonganDarah']);
+                print(user['username']);
+                print(snapshot.data!);
+                return Column(
+                  children: [
+                    SizedBox(
+                      height: 25,
+                    ),
+                    fullName("${user['namaLengkap']}"),
+                    tanggalLahir("${user['tanggalLahir']}"),
+                    golonganDarah("${user['golonganDarah']}"),
+                    username("${user['username']}"),
+                    password(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    updateButton()
+                  ],
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }));
   }
 }

@@ -1,28 +1,29 @@
+import 'package:blood_distirbution/app/modules/login/controllers/login_controller.dart';
+import 'package:blood_distirbution/app/modules/register/controllers/register_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 import '../../../data/models/user_model.dart';
 
 class HomeController extends GetxController {
-  FirebaseFirestore firebase = FirebaseFirestore.instance;
+  final userData = FirebaseFirestore.instance.collection('users').withConverter(
+        fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
+        toFirestore: (snapshot, _) => snapshot.toJson(),
+      );
+  final FirebaseFirestore fire = FirebaseFirestore.instance;
 
-  Future<List<UserModel>> getAllData() async {
-    var value = await firebase.collection('user').get();
-    var data = value.docs;
+  FirebaseAuth auth = FirebaseAuth.instance;
 
-    if (data.length > 0) {
-      try {
-        return data.map((e) {
-          UserModel user = UserModel.fromJson(Map<String,dynamic>.from(e.data()));
-          print(user.name);
-          return user;
-        }).toList();
-      } catch (e) {
-        print(e.toString());
-        return [];
-      }
-    } else {
-      return [];
-    }
+   Future<DocumentSnapshot<Map<String,dynamic>>> getData() async {
+    String uid = await auth.currentUser!.uid;
+    var data = fire.collection('users');  
+    return data.doc(uid).get();
+  }
+  
+
+  @override
+  void onClose() {
+    super.onClose();
   }
 }
