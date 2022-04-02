@@ -233,9 +233,13 @@ class ContentProfile extends GetView<ProfileController> {
         child: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             future: controller.main(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
+              if (snapshot.connectionState == ConnectionState.waiting ||
+                  controller.isLoading.value) {
+                return Container(
+                  margin: EdgeInsets.only(top: 150),
+                  child: CircularProgressIndicator(
+                    color: primaryColor,
+                  ),
                 );
               }
               if (snapshot.hasData) {
@@ -262,8 +266,11 @@ class ContentProfile extends GetView<ProfileController> {
                   ],
                 );
               } else {
-                return Center(
-                  child: CircularProgressIndicator(),
+                return Container(
+                  margin: EdgeInsets.only(top: 200),
+                  child: CircularProgressIndicator(
+                    color: primaryColor,
+                  ),
                 );
               }
             }));

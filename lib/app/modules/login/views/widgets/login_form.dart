@@ -72,11 +72,17 @@ class LoginForm extends GetView<LoginController> {
             onPressed: () async {
               controller.login();
             },
-            child: Text(
-              "Login",
-              style: primaryTextStyle.copyWith(
-                  fontSize: 20, color: backgroundColor, fontWeight: semiBold),
-            )),
+            child: Obx(() => (controller.isLoading.value)
+                ? CircularProgressIndicator(
+                    color: backgroundColor,
+                  )
+                : Text(
+                    "Login",
+                    style: primaryTextStyle.copyWith(
+                        fontSize: 20,
+                        color: backgroundColor,
+                        fontWeight: semiBold),
+                  ))),
       );
     }
 

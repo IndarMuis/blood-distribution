@@ -10,22 +10,26 @@ class LoginController extends GetxController {
   TextEditingController inputEmail = TextEditingController();
   TextEditingController inputPassword = TextEditingController();
   RegisterController regis = Get.put(RegisterController());
-
   FirebaseAuth auth = FirebaseAuth.instance;
+
+  var isLoading = false.obs;
 
   void login() async {
     if (inputEmail.text.isNotEmpty && inputPassword.text.isNotEmpty) {
       try {
+        isLoading.value = true;
         UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: inputEmail.text,
           password: inputPassword.text,
         );
 
         print(userCredential);
+        isLoading.value = false;
         Get.offAllNamed(Routes.HOME);
 
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
+        isLoading.value = false;
           Get.snackbar('', '',
               colorText: backgroundColor,
               titleText: Text(
@@ -42,6 +46,7 @@ class LoginController extends GetxController {
               snackPosition: SnackPosition.TOP,
               duration: Duration(seconds: 3));
         } else if (e.code == 'wrong-password') {
+          isLoading.value = false;
           Get.snackbar('', '',
               colorText: backgroundColor,
               titleText: Text(
@@ -58,6 +63,7 @@ class LoginController extends GetxController {
               snackPosition: SnackPosition.TOP,
               duration: Duration(seconds: 3));
         } else {
+          isLoading.value = false;
            Get.snackbar('', '',
               colorText: backgroundColor,
               titleText: Text(
@@ -75,6 +81,7 @@ class LoginController extends GetxController {
               duration: Duration(seconds: 3));
         }
       } catch (e) {
+        isLoading.value = false;
          Get.snackbar('', '',
               colorText: backgroundColor,
               titleText: Text(

@@ -1,6 +1,7 @@
 import 'package:blood_distirbution/app/modules/home/views/widgets/card_menu.dart';
 import 'package:blood_distirbution/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/route_manager.dart';
 
 import '../../../../../theme.dart';
@@ -20,17 +21,27 @@ class ContentHome extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               GestureDetector(
-                onTap: () {
-                  Get.toNamed(Routes.BLOOD_DONOR);
-                },
+                  onTap: () async {
+                    await Geolocator.requestPermission();
+                    Get.toNamed(Routes.BLOOD_DONOR);
+                  },
                   child: CardMenu(
-                menuName: "Blood Donors",
-                menuImage: "assets/donate.png",
-              )),
+                    menuName: "Blood Donors",
+                    menuImage: "assets/donate.png",
+                  )),
               SizedBox(width: 20),
               GestureDetector(
-                onTap: () {
-                  Get.toNamed(Routes.SEARCH_DONOR);
+                onTap: () async {
+                  LocationPermission permission =
+                      await Geolocator.checkPermission();
+                  if (permission == LocationPermission.denied ||
+                      permission == LocationPermission.deniedForever) {
+                    LocationPermission asked =
+                        await Geolocator.requestPermission();
+                    print("Permission not given");
+                  } else {
+                    Get.toNamed(Routes.SEARCH_DONOR);
+                  }
                 },
                 child: CardMenu(
                   menuName: "Find Donors",

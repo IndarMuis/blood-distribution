@@ -2,7 +2,15 @@ import 'package:blood_distirbution/theme.dart';
 import 'package:flutter/material.dart';
 
 class RequestCard extends StatelessWidget {
-  const RequestCard({Key? key}) : super(key: key);
+  final String nama;
+  final String jumlahDarah;
+  final String golonganDarah;
+  final VoidCallback onTap;
+  RequestCard(
+      {required this.nama,
+      required this.jumlahDarah,
+      required this.golonganDarah,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +28,10 @@ class RequestCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "User 1",
+                  "${nama}",
                   style: primaryTextStyle.copyWith(
-                      fontSize: 18,),
+                    fontSize: 17,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Divider(
@@ -31,16 +40,24 @@ class RequestCard extends StatelessWidget {
                   thickness: 2,
                 ),
                 Text(
-                  "2 kantong darah",
+                  "Golongan Darah: ${golonganDarah}",
                   style: primaryTextStyle.copyWith(
-                      fontSize: 18,),
+                    fontSize: 17,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  "${jumlahDarah}",
+                  style: primaryTextStyle.copyWith(
+                    fontSize: 17,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: onTap,
             child: Container(
               height: 75,
               width: 75,

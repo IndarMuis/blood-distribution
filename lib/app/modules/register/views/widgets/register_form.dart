@@ -223,11 +223,17 @@ class RegisterForm extends GetView<RegisterController> {
             onPressed: () async {
               controller.addUser();
             },
-            child: Text(
-              "Register",
-              style: primaryTextStyle.copyWith(
-                  fontSize: 20, color: backgroundColor, fontWeight: semiBold),
-            )),
+            child: Obx(() => (controller.isLoading.value)
+                ? CircularProgressIndicator(
+                    color: backgroundColor,
+                  )
+                : Text(
+                    "Register",
+                    style: primaryTextStyle.copyWith(
+                        fontSize: 20,
+                        color: backgroundColor,
+                        fontWeight: semiBold),
+                  ))),
       );
     }
 

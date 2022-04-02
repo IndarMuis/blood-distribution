@@ -10,7 +10,7 @@ import '../../../data/models/user_model.dart';
 class ProfileController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore fire = FirebaseFirestore.instance;
-  
+
   final user = FirebaseFirestore.instance
       .collection('users')
       .withConverter<UserModel>(
@@ -18,13 +18,17 @@ class ProfileController extends GetxController {
         toFirestore: (user, _) => user.toJson(),
       );
 
-  Future<DocumentSnapshot<Map<String,dynamic>>> main() async {
+  var isLoading = false.obs;
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> main() async {
+    isLoading.value = true;
     String uid = await auth.currentUser!.uid;
-    var data = fire.collection('users');  
+    var data = fire.collection('users');
+    isLoading.value = false;
     return data.doc(uid).get();
   }
   // Future<QuerySnapshot<Object?>> main2() async {
-    // String uid = await auth.currentUser!.uid;
+  // String uid = await auth.currentUser!.uid;
   //   var data = fire.collection('users');
   //   var user = data.doc(uid).get();
 

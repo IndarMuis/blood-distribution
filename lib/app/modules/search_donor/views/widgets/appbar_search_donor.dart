@@ -1,3 +1,4 @@
+import 'package:blood_distirbution/app/routes/app_pages.dart';
 import 'package:blood_distirbution/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -23,7 +24,7 @@ class AppbarSearchDonor extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: GestureDetector(
               onTap: () {
-                Get.back();
+                Get.offAllNamed(Routes.HOME);
               },
               child: Icon(
                 Icons.arrow_back_ios,

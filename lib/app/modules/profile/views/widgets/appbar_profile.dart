@@ -102,15 +102,22 @@ class AppbarProfile extends GetView<ProfileController> {
         FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             future: controller.main(),
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.connectionState == ConnectionState.waiting ||
+                  controller.isLoading.value) {
+                return Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 150),
+                    child: CircularProgressIndicator(
+                      color: backgroundColor,
+                    ),
+                  ),
+                );
+              } else {
                 var user = snapshot.data!.data()!;
                 return Column(
                   children: [actionButton(), title("${user['namaLengkap']}")],
                 );
               }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
             })
       ],
     );

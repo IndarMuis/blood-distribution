@@ -1,4 +1,3 @@
-import 'package:blood_distirbution/app/modules/profile/bindings/profile_binding.dart';
 import 'package:get/get.dart';
 
 import 'package:blood_distirbution/app/modules/blood_donor/bindings/blood_donor_binding.dart';
@@ -7,12 +6,15 @@ import 'package:blood_distirbution/app/modules/home/bindings/home_binding.dart';
 import 'package:blood_distirbution/app/modules/home/views/home_view.dart';
 import 'package:blood_distirbution/app/modules/login/bindings/login_binding.dart';
 import 'package:blood_distirbution/app/modules/login/views/login_view.dart';
+import 'package:blood_distirbution/app/modules/profile/bindings/profile_binding.dart';
 import 'package:blood_distirbution/app/modules/register/bindings/register_binding.dart';
 import 'package:blood_distirbution/app/modules/register/views/register_view.dart';
 import 'package:blood_distirbution/app/modules/search_donor/bindings/search_donor_binding.dart';
 import 'package:blood_distirbution/app/modules/search_donor/views/search_donor_view.dart';
 import 'package:blood_distirbution/app/modules/splash/bindings/splash_binding.dart';
 import 'package:blood_distirbution/app/modules/splash/views/splash_view.dart';
+import 'package:blood_distirbution/app/modules/widget-test/bindings/widget_test_binding.dart';
+import 'package:blood_distirbution/app/modules/widget-test/views/widget_test_view.dart';
 
 import '../modules/profile/views/profile_view.dart';
 
@@ -22,6 +24,7 @@ class AppPages {
   AppPages._();
 
   static const INITIAL = Routes.LOGIN;
+  // static const INITIAL = Routes.WIDGET_TEST;
 
   static final routes = [
     GetPage(
@@ -58,6 +61,11 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => ProfileView(),
       binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.WIDGET_TEST,
+      page: () => WidgetTestView(),
+      binding: WidgetTestBinding(),
     ),
   ];
 }

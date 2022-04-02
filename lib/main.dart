@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 import 'app/data/models/user_model.dart';
@@ -38,23 +37,6 @@ void main() async {
             );
           }
           return CircularProgressIndicator();
-          // print(snapshot.data);
-          // if (snapshot.hasData) {
-          //   print(snapshot.data!.uid != "");
-          //   return GetMaterialApp(
-          //     debugShowCheckedModeBanner: false,
-          //     title: "Application",
-          //     initialRoute: Routes.HOME,
-          //     getPages: AppPages.routes,
-          //   );
-          // } else {
-          //   return GetMaterialApp(
-          //     debugShowCheckedModeBanner: false,
-          //     title: "Application",
-          //     initialRoute: AppPages.INITIAL,
-          //     getPages: AppPages.routes,
-          //   );
-          // }
         }),
   );
 }

@@ -1,10 +1,16 @@
+import 'package:blood_distirbution/app/modules/home/views/home_view.dart';
+import 'package:blood_distirbution/app/modules/search_donor/controllers/search_donor_controller.dart';
 import 'package:blood_distirbution/theme.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import 'package:get/state_manager.dart';
 
 class ContentSearchDonor extends StatelessWidget {
-  const ContentSearchDonor({Key? key}) : super(key: key);
-
+  ContentSearchDonor({Key? key}) : super(key: key);
+  var controller = Get.find<SearchDonorController>();
   @override
   Widget build(BuildContext context) {
     Widget inputGolonganDarah() {
@@ -25,7 +31,7 @@ class ContentSearchDonor extends StatelessWidget {
             mode: Mode.DIALOG,
             showClearButton: true,
             onChanged: (value) {
-              print(value);
+              controller.golonganDarah.value = value.toString();
             },
             items: ["A", "B", "AB", "O"],
             dropdownSearchDecoration: InputDecoration(
@@ -57,7 +63,7 @@ class ContentSearchDonor extends StatelessWidget {
             mode: Mode.DIALOG,
             showClearButton: true,
             onChanged: (value) {
-              print(value);
+              controller.banyakDarah.value = value.toString();
             },
             items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             dropdownSearchDecoration: InputDecoration(
@@ -71,27 +77,64 @@ class ContentSearchDonor extends StatelessWidget {
       );
     }
 
+    Widget inputNomorTelepon() {
+      return  Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Nomor Telepon (WhatsApp) :",
+            style: primaryTextStyle.copyWith(
+              fontSize: 18,
+              fontWeight: bold,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextField(
+            keyboardType: TextInputType.number,
+          controller: controller.inputNomorTelepon,
+          obscureText: true,
+          decoration: InputDecoration(
+            hintText: "082193XXXXX",
+            hintStyle: primaryTextStyle.copyWith(fontWeight: light),
+            contentPadding: EdgeInsets.all(defaultMargin),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+        ),
+        ],
+      );
+    }
+
     Widget buttonProcess() {
       return GestureDetector(
-        onTap: () {},
+        onTap: () {
+          // print(controller.banyakDarah.value);
+          // print(controller.golonganDarah.value);
+          controller.searchDonor();
+        },
         child: Container(
           padding:
               EdgeInsets.symmetric(vertical: 10, horizontal: defaultMargin),
           height: 55,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: primaryColor,
-            borderRadius: BorderRadius.circular(25)
-          ),
+              color: primaryColor, borderRadius: BorderRadius.circular(25)),
           child: Center(
-            child: Text(
-              "Cari Sukarelawan",
-              style: primaryTextStyle.copyWith(
-                fontSize: 20,
-                color: backgroundColor,
-                fontWeight: bold,
-              ),
-            ),
+            child: Obx(() => (controller.isLoading.value)
+                ? CircularProgressIndicator(
+                    color: backgroundColor,
+                  )
+                : Text(
+                    "Cari Sukarelawan",
+                    style: primaryTextStyle.copyWith(
+                      fontSize: 20,
+                      color: backgroundColor,
+                      fontWeight: bold,
+                    ),
+                  )),
           ),
         ),
       );
@@ -113,6 +156,7 @@ class ContentSearchDonor extends StatelessWidget {
     }
 
     return Container(
+      margin: EdgeInsets.only(top: 30),
       padding: EdgeInsets.all(defaultMargin),
       child: Column(
         children: [
@@ -122,13 +166,15 @@ class ContentSearchDonor extends StatelessWidget {
           ),
           inputJumlahDarah(),
           SizedBox(
-            height: 30,
+            height: 20,
+          ),
+          inputNomorTelepon(),
+          SizedBox(
+            height: 50,
           ),
           buttonProcess(),
-          SizedBox(
-            height: 40,
-          ),
-          Align(alignment: Alignment.bottomCenter, child: miniMap())
+          
+          // Align(alignment: Alignment.bottomCenter, child: miniMap())
         ],
       ),
     );

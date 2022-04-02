@@ -87,16 +87,25 @@ class AppbarHome extends GetView<HomeController> {
             future: controller.getData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              }
-              if (snapshot.hasData) {
-                Map<String, dynamic> user = snapshot.data!.data()!;
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [userCard("${user['username']}"), title()],
+                return Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 200),
+                    child: CircularProgressIndicator(
+                      color: backgroundColor,
+                    ),
+                  ),
                 );
+              } else {
+                Map<String, dynamic> user = snapshot.data!.data()!;
+                return Obx(() => (controller.isLoading.value)
+                    ? Center(
+                        child:
+                            CircularProgressIndicator(color: backgroundColor))
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [userCard("${user['username']}"), title()],
+                      ));
               }
-              return CircularProgressIndicator();
             })
       ],
     );

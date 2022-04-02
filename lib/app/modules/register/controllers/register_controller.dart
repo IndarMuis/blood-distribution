@@ -16,6 +16,7 @@ class RegisterController extends GetxController {
   TextEditingController inputPassword = TextEditingController();
   var inputTanggalLahir = "".obs;
   var inputGolonganDarah = "".obs;
+  var isLoading = false.obs;
 
   final user = FirebaseFirestore.instance
       .collection('users')
@@ -34,6 +35,7 @@ class RegisterController extends GetxController {
         inputTanggalLahir.isNotEmpty &&
         inputGolonganDarah.isNotEmpty) {
       try {
+        isLoading.value = true;
         UserCredential userCredential =
             await auth.createUserWithEmailAndPassword(
                 email: inputEmail.text, password: "password");
@@ -52,10 +54,13 @@ class RegisterController extends GetxController {
               ));
           print(user.get());
           print(userCredential);
+          isLoading.value = false;
+
           Get.offAllNamed(Routes.HOME);
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'week-password') {
+          isLoading.value = false;
           Get.snackbar('', '',
               colorText: backgroundColor,
               titleText: Text(
@@ -72,6 +77,7 @@ class RegisterController extends GetxController {
               snackPosition: SnackPosition.TOP,
               duration: Duration(seconds: 3));
         } else if (e.code == 'email-already-in-use') {
+          isLoading.value = false;
           Get.snackbar('', '',
               colorText: backgroundColor,
               titleText: Text(
@@ -89,6 +95,7 @@ class RegisterController extends GetxController {
               duration: Duration(seconds: 3));
         }
       } catch (e) {
+        isLoading.value = false;
         Get.snackbar('', '',
             colorText: backgroundColor,
             titleText: Text(
