@@ -5,11 +5,13 @@ class RequestCard extends StatelessWidget {
   final String nama;
   final String jumlahDarah;
   final String golonganDarah;
+  final String tanggal;
   final VoidCallback onTap;
   RequestCard(
       {required this.nama,
-      required this.jumlahDarah,
       required this.golonganDarah,
+      required this.tanggal,
+      required this.jumlahDarah,
       required this.onTap});
 
   @override
@@ -34,11 +36,6 @@ class RequestCard extends StatelessWidget {
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
-                Divider(
-                  color: primaryColor,
-                  height: 10,
-                  thickness: 2,
-                ),
                 Text(
                   "Golongan Darah: ${golonganDarah}",
                   style: primaryTextStyle.copyWith(
@@ -46,8 +43,20 @@ class RequestCard extends StatelessWidget {
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
+                Divider(
+                  color: primaryColor,
+                  height: 10,
+                  thickness: 1,
+                ),
                 Text(
-                  "${jumlahDarah}",
+                  "Tanggal: ${tanggal}",
+                  style: primaryTextStyle.copyWith(
+                    fontSize: 17,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  "${jumlahDarah} Kantong Darah",
                   style: primaryTextStyle.copyWith(
                     fontSize: 17,
                   ),

@@ -3,6 +3,7 @@ import 'package:blood_distirbution/app/routes/app_pages.dart';
 import 'package:blood_distirbution/theme.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -16,7 +17,7 @@ class RegisterForm extends GetView<RegisterController> {
         Text(
           "Nama Lengkap",
           style: primaryTextStyle.copyWith(
-            fontSize: 20,
+            fontSize: 17,
           ),
         ),
         SizedBox(
@@ -28,9 +29,10 @@ class RegisterForm extends GetView<RegisterController> {
             if (value!.isEmpty) {
               return "Form must be filled";
             }
+            return null;
           },
           decoration: InputDecoration(
-            hintText: "..........",
+            hintText: "_",
             hintStyle: primaryTextStyle.copyWith(fontWeight: light),
             contentPadding: EdgeInsets.all(defaultMargin),
             border: OutlineInputBorder(
@@ -46,7 +48,7 @@ class RegisterForm extends GetView<RegisterController> {
         Text(
           "Tempat Lahir",
           style: primaryTextStyle.copyWith(
-            fontSize: 20,
+            fontSize: 17,
           ),
         ),
         SizedBox(
@@ -55,7 +57,7 @@ class RegisterForm extends GetView<RegisterController> {
         TextField(
           controller: controller.inputTempatLahir,
           decoration: InputDecoration(
-            hintText: "..........",
+            hintText: "_",
             hintStyle: primaryTextStyle.copyWith(fontWeight: light),
             contentPadding: EdgeInsets.all(defaultMargin),
             border: OutlineInputBorder(
@@ -71,7 +73,7 @@ class RegisterForm extends GetView<RegisterController> {
         Text(
           "Tanggal Lahir",
           style: primaryTextStyle.copyWith(
-            fontSize: 20,
+            fontSize: 17,
           ),
         ),
         SizedBox(
@@ -112,7 +114,7 @@ class RegisterForm extends GetView<RegisterController> {
         Text(
           "Golongan Darah",
           style: primaryTextStyle.copyWith(
-            fontSize: 20,
+            fontSize: 17,
           ),
         ),
         SizedBox(
@@ -140,7 +142,7 @@ class RegisterForm extends GetView<RegisterController> {
         Text(
           "Email",
           style: primaryTextStyle.copyWith(
-            fontSize: 20,
+            fontSize: 17,
           ),
         ),
         SizedBox(
@@ -149,8 +151,8 @@ class RegisterForm extends GetView<RegisterController> {
         TextField(
           controller: controller.inputEmail,
           decoration: InputDecoration(
-            hintText: "..........",
-            hintStyle: primaryTextStyle.copyWith(fontWeight: light),
+            hintText: "example@gmail.com",
+            hintStyle: primaryTextStyle.copyWith(fontWeight: light, fontSize: 14, fontStyle: FontStyle.italic),
             contentPadding: EdgeInsets.all(defaultMargin),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
@@ -165,7 +167,7 @@ class RegisterForm extends GetView<RegisterController> {
         Text(
           "Username",
           style: primaryTextStyle.copyWith(
-            fontSize: 20,
+            fontSize: 17,
           ),
         ),
         SizedBox(
@@ -174,7 +176,7 @@ class RegisterForm extends GetView<RegisterController> {
         TextField(
           controller: controller.inputUsername,
           decoration: InputDecoration(
-            hintText: "..........",
+            hintText: "_",
             hintStyle: primaryTextStyle.copyWith(fontWeight: light),
             contentPadding: EdgeInsets.all(defaultMargin),
             border: OutlineInputBorder(
@@ -190,7 +192,7 @@ class RegisterForm extends GetView<RegisterController> {
         Text(
           "Password",
           style: primaryTextStyle.copyWith(
-            fontSize: 20,
+            fontSize: 17,
           ),
         ),
         SizedBox(
@@ -200,7 +202,34 @@ class RegisterForm extends GetView<RegisterController> {
           controller: controller.inputPassword,
           obscureText: true,
           decoration: InputDecoration(
-            hintText: "..........",
+            hintText: "min: 8 character",
+            hintStyle: primaryTextStyle.copyWith(
+                fontWeight: light, fontSize: 14, fontStyle: FontStyle.italic),
+            contentPadding: EdgeInsets.all(defaultMargin),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+        ),
+      ]);
+    }
+
+    Widget nomorTeleponInput() {
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          "Nomor Telepon",
+          style: primaryTextStyle.copyWith(
+            fontSize: 17,
+          ),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        TextField(
+          keyboardType: TextInputType.number,
+          controller: controller.inputNomorTelepon,
+          decoration: InputDecoration(
+            hintText: "_",
             hintStyle: primaryTextStyle.copyWith(fontWeight: light),
             contentPadding: EdgeInsets.all(defaultMargin),
             border: OutlineInputBorder(
@@ -221,6 +250,82 @@ class RegisterForm extends GetView<RegisterController> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25))),
             onPressed: () async {
+              LocationPermission permission;
+              var serviceEnabled = await Geolocator.isLocationServiceEnabled();
+              if (!serviceEnabled) {
+                Get.snackbar('', '',
+                    colorText: backgroundColor,
+                    titleText: Text(
+                      'Error',
+                      style: primaryTextStyle.copyWith(
+                          fontSize: 17,
+                          fontWeight: semiBold,
+                          color: backgroundColor),
+                    ),
+                    messageText: Text(
+                      'Akses lokasi ditolak',
+                      style: primaryTextStyle.copyWith(
+                          fontSize: 17,
+                          fontWeight: semiBold,
+                          color: backgroundColor),
+                    ),
+                    backgroundColor: primaryColor.withOpacity(0.7),
+                    snackPosition: SnackPosition.TOP,
+                    duration: Duration(seconds: 3));
+                return Get.offAllNamed(Routes.REGISTER);
+              }
+
+              permission = await Geolocator.checkPermission();
+              if (permission == LocationPermission.denied) {
+                permission = await Geolocator.requestPermission();
+                permission = await Geolocator.requestPermission();
+                if (permission == LocationPermission.denied) {
+                  Get.snackbar('', '',
+                      colorText: backgroundColor,
+                      titleText: Text(
+                        'Error',
+                        style: primaryTextStyle.copyWith(
+                            fontSize: 17,
+                            fontWeight: semiBold,
+                            color: backgroundColor),
+                      ),
+                      messageText: Text(
+                        'Akses lokasi ditolak',
+                        style: primaryTextStyle.copyWith(
+                            fontSize: 17,
+                            fontWeight: semiBold,
+                            color: backgroundColor),
+                      ),
+                      backgroundColor: primaryColor.withOpacity(0.7),
+                      snackPosition: SnackPosition.TOP,
+                      duration: Duration(seconds: 3));
+                  return Get.offAllNamed(Routes.REGISTER);
+                }
+                controller.addUser();
+              }
+
+              if (permission == LocationPermission.deniedForever) {
+                Get.snackbar('', '',
+                    colorText: backgroundColor,
+                    titleText: Text(
+                      'Error',
+                      style: primaryTextStyle.copyWith(
+                          fontSize: 17,
+                          fontWeight: semiBold,
+                          color: backgroundColor),
+                    ),
+                    messageText: Text(
+                      'Akses lokasi ditolak',
+                      style: primaryTextStyle.copyWith(
+                          fontSize: 17,
+                          fontWeight: semiBold,
+                          color: backgroundColor),
+                    ),
+                    backgroundColor: primaryColor.withOpacity(0.7),
+                    snackPosition: SnackPosition.TOP,
+                    duration: Duration(seconds: 3));
+                return Get.offAllNamed(Routes.REGISTER);
+              }
               controller.addUser();
             },
             child: Obx(() => (controller.isLoading.value)
@@ -300,6 +405,10 @@ class RegisterForm extends GetView<RegisterController> {
             height: 20,
           ),
           passwordInput(),
+          SizedBox(
+            height: 40,
+          ),
+          nomorTeleponInput(),
           SizedBox(
             height: 40,
           ),

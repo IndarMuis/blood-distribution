@@ -1,16 +1,15 @@
 import 'package:blood_distirbution/theme.dart';
 import 'package:flutter/material.dart';
 
-
-class HistoryCard extends StatelessWidget {
+class UserCard extends StatelessWidget {
   final String nama;
-  final String jumlahDarah;
-  final String tanggal;
-  HistoryCard({Key? key, required this.nama, required this.jumlahDarah, required this.tanggal}) : super(key: key);
+  final String nomorTelepon;
+  final String golonganDarah;
+  final double jarak;
+  UserCard({Key? key, required this.nama, required this.nomorTelepon, required this.jarak, required this.golonganDarah}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // var controller = Get.find<BloodDonorController>();
     return Container(
       margin: EdgeInsets.only(bottom: 15),
       padding: EdgeInsets.all(10),
@@ -24,27 +23,34 @@ class HistoryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Kepada : ${nama}",
+                  "Nama : ${nama}",
                   style: primaryTextStyle.copyWith(
-                      fontSize: 18, fontWeight: regular),
+                      fontSize: 16, fontWeight: regular),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  "Tanggal : ${tanggal}",
+                  "Golongan Darah : ${golonganDarah}",
                   style: primaryTextStyle.copyWith(
-                      fontSize: 18, fontWeight: regular),
+                      fontSize: 16, fontWeight: regular),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  "Jumlah : 1 Kantong Darah",
+                  "Telepon : ${nomorTelepon}",
                   style:
-                      primaryTextStyle.copyWith(fontSize: 18, fontWeight: regular),
+                      primaryTextStyle.copyWith(fontSize: 16, fontWeight: regular),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          Image.asset("assets/success.png", width: 40, height: 40,)
+          Column(
+            children: [
+              Icon(Icons.location_history, size: 40,),
+              SizedBox(height: 5,),
+              Text((jarak < 1) ? "${jarak*1000} M" : "${jarak} KM")
+            ],
+          )
+          // Image.asset("assets/success.png", width: 40, height: 40,)
         ],
       ),
     );

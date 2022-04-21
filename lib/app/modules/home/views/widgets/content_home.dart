@@ -22,8 +22,17 @@ class ContentHome extends StatelessWidget {
             children: [
               GestureDetector(
                   onTap: () async {
-                    await Geolocator.requestPermission();
+                  LocationPermission permission =
+                      await Geolocator.checkPermission();
+                  if (permission == LocationPermission.denied ||
+                      permission == LocationPermission.deniedForever) {
+                    LocationPermission asked =
+                        await Geolocator.requestPermission();
+                    print("Permission not given");
+                  } else {
+                    
                     Get.toNamed(Routes.BLOOD_DONOR);
+                  }
                   },
                   child: CardMenu(
                     menuName: "Blood Donors",
@@ -67,7 +76,9 @@ class ContentHome extends StatelessWidget {
               ),
               SizedBox(width: 20),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Get.toNamed(Routes.ABOUT);
+                },
                 child: CardMenu(
                   menuName: "About",
                   menuImage: "assets/info.png",

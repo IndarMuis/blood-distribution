@@ -1,11 +1,9 @@
-import 'package:blood_distirbution/app/data/models/user_model.dart';
 import 'package:blood_distirbution/app/modules/profile/controllers/profile_controller.dart';
 import 'package:blood_distirbution/app/routes/app_pages.dart';
 import 'package:blood_distirbution/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/route_manager.dart';
 
 class AppbarProfile extends GetView<ProfileController> {
   const AppbarProfile({Key? key}) : super(key: key);
@@ -24,7 +22,7 @@ class AppbarProfile extends GetView<ProfileController> {
             children: [
               GestureDetector(
                   onTap: () {
-                    Get.back();
+                    Get.offAllNamed(Routes.HOME);
                     ;
                   },
                   child: Icon(
@@ -38,7 +36,7 @@ class AppbarProfile extends GetView<ProfileController> {
                     Get.defaultDialog(
                       onConfirm: () {
                         controller.auth.signOut();
-                        Get.offAndToNamed(Routes.LOGIN);
+                        Get.offAllNamed(Routes.LOGIN);
                       },
                       onCancel: () {},
                       title: "Sign Out",

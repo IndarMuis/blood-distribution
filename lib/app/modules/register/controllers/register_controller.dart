@@ -3,10 +3,10 @@ import 'package:blood_distirbution/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../../../data/models/user_model.dart';
+import 'package:geolocator/geolocator.dart';
 
 class RegisterController extends GetxController {
   TextEditingController inputNamaLengkap = TextEditingController();
@@ -14,16 +14,15 @@ class RegisterController extends GetxController {
   TextEditingController inputEmail = TextEditingController();
   TextEditingController inputUsername = TextEditingController();
   TextEditingController inputPassword = TextEditingController();
+  TextEditingController inputNomorTelepon = TextEditingController();
   var inputTanggalLahir = "".obs;
   var inputGolonganDarah = "".obs;
   var isLoading = false.obs;
+  var latitude = 0.0.obs;
+  var longitude = 0.0.obs;
 
-  final user = FirebaseFirestore.instance
-      .collection('users')
-      .withConverter<UserModel>(
-        fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
-        toFirestore: (user, _) => user.toJson(),
-      );
+  final user = FirebaseFirestore.instance.collection('users');
+  final request = FirebaseFirestore.instance.collection('request');
 
   FirebaseAuth auth = FirebaseAuth.instance;
   void addUser() async {
@@ -32,26 +31,56 @@ class RegisterController extends GetxController {
         inputEmail.text.isNotEmpty &&
         inputUsername.text.isNotEmpty &&
         inputPassword.text.isNotEmpty &&
+        inputNomorTelepon.text.isNotEmpty &&
         inputTanggalLahir.isNotEmpty &&
         inputGolonganDarah.isNotEmpty) {
       try {
         isLoading.value = true;
+        Position currentPostion = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best);
+        latitude.value = currentPostion.latitude;
+        longitude.value = currentPostion.longitude;
+        List<Placemark> placemark =
+            await placemarkFromCoordinates(latitude.value, longitude.value);
+        var alamat = placemark[0].subLocality! + ', ' + placemark[0].locality!;
         UserCredential userCredential =
             await auth.createUserWithEmailAndPassword(
-                email: inputEmail.text, password: "password");
+                email: inputEmail.text, password: inputPassword.text);
 
         if (userCredential.user != null) {
           String uid = userCredential.user!.uid;
+          await user.doc(uid).set({
+            "uid": uid,
+            "namaLengkap": inputNamaLengkap.text,
+            "tempatLahir": inputTempatLahir.text,
+            "tanggalLahir": inputTanggalLahir.value,
+            "golonganDarah": inputGolonganDarah.value,
+            "email": inputEmail.text,
+            "nomorTelepon": inputNomorTelepon.text,
+            "username": inputUsername.text,
+            "lokasiTerkini": {
+              "latitude": latitude.value,
+              "longitude": longitude.value,
+              "alamat": alamat
+            }
+          });
 
-          await user.doc(uid).set(UserModel(
-                uid: uid,
-                namaLengkap: inputNamaLengkap.text,
-                tempatLahir: inputTempatLahir.text,
-                tanggalLahir: inputTanggalLahir.value,
-                golonganDarah: inputGolonganDarah.value,
-                email: inputEmail.text,
-                username: inputUsername.text,
-              ));
+          QuerySnapshot<Map<String, dynamic>> querySnapshot =
+              await request.get();
+          final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+          if (allData.isNotEmpty) {
+            for (int i = 0; i < allData.length; i++) {
+              var lat = allData[i]['latitude'];
+              var lon = allData[i]['longitude'];
+
+              var jarak = Geolocator.distanceBetween(
+                          latitude.value, longitude.value, lat, lon)
+                      .round()
+                      .toInt() /
+                  1000;
+              request.doc(allData[i]['uid']).update({"jarak": jarak});
+            }
+          }
           print(user.get());
           print(userCredential);
           isLoading.value = false;
@@ -131,6 +160,7 @@ class RegisterController extends GetxController {
     inputTempatLahir.clear();
     inputEmail.clear();
     inputUsername.clear();
+    inputNomorTelepon.clear();
     inputPassword.clear();
   }
 }

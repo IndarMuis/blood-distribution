@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import 'package:blood_distirbution/app/modules/about/bindings/about_binding.dart';
+import 'package:blood_distirbution/app/modules/about/views/about_view.dart';
 import 'package:blood_distirbution/app/modules/blood_donor/bindings/blood_donor_binding.dart';
 import 'package:blood_distirbution/app/modules/blood_donor/views/blood_donor_view.dart';
 import 'package:blood_distirbution/app/modules/home/bindings/home_binding.dart';
@@ -11,10 +13,6 @@ import 'package:blood_distirbution/app/modules/register/bindings/register_bindin
 import 'package:blood_distirbution/app/modules/register/views/register_view.dart';
 import 'package:blood_distirbution/app/modules/search_donor/bindings/search_donor_binding.dart';
 import 'package:blood_distirbution/app/modules/search_donor/views/search_donor_view.dart';
-import 'package:blood_distirbution/app/modules/splash/bindings/splash_binding.dart';
-import 'package:blood_distirbution/app/modules/splash/views/splash_view.dart';
-import 'package:blood_distirbution/app/modules/widget-test/bindings/widget_test_binding.dart';
-import 'package:blood_distirbution/app/modules/widget-test/views/widget_test_view.dart';
 
 import '../modules/profile/views/profile_view.dart';
 
@@ -53,19 +51,14 @@ class AppPages {
       binding: RegisterBinding(),
     ),
     GetPage(
-      name: _Paths.SPLASH,
-      page: () => SplashView(),
-      binding: SplashBinding(),
-    ),
-    GetPage(
       name: _Paths.PROFILE,
       page: () => ProfileView(),
       binding: ProfileBinding(),
     ),
     GetPage(
-      name: _Paths.WIDGET_TEST,
-      page: () => WidgetTestView(),
-      binding: WidgetTestBinding(),
+      name: _Paths.ABOUT,
+      page: () => AboutView(),
+      binding: AboutBinding(),
     ),
   ];
 }

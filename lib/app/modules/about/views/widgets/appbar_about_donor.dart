@@ -3,8 +3,8 @@ import 'package:blood_distirbution/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
-class AppbarBloodDonor extends StatelessWidget {
-  const AppbarBloodDonor({Key? key}) : super(key: key);
+class AppbarAboutDonor extends StatelessWidget {
+  const AppbarAboutDonor({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +33,10 @@ class AppbarBloodDonor extends StatelessWidget {
               ),
             ),
           ),
-          Image.asset("assets/donate.png", width: 70,),
+          Image.asset("assets/info.png", width: 70,),
           SizedBox(height: 15,),
           Text(
-            "BLOOD DONORS",
+            "ABOUT DONORS",
             style: primaryTextStyle.copyWith(
                 color: backgroundColor, fontSize: 30, fontWeight: bold),
           )

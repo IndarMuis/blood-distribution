@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../../theme.dart';
 
 class CardMenu extends StatelessWidget {
-  String? menuName;
-  String? menuImage;
+  final String? menuName;
+  final String? menuImage;
   CardMenu({Key? key, this.menuName, this.menuImage}) : super(key: key);
 
   @override

@@ -1,12 +1,10 @@
-import 'package:blood_distirbution/app/data/models/user_model.dart';
-import 'package:blood_distirbution/app/modules/home/views/widgets/card_menu.dart';
+
 import 'package:blood_distirbution/app/modules/profile/controllers/profile_controller.dart';
-import 'package:blood_distirbution/app/routes/app_pages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/route_manager.dart';
-
+import 'package:intl/intl.dart';
 import '../../../../../theme.dart';
 
 class ContentProfile extends GetView<ProfileController> {
@@ -40,10 +38,25 @@ class ContentProfile extends GetView<ProfileController> {
                   color: Colors.white, borderRadius: BorderRadius.circular(20)),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  "${fullName}",
-                  style: primaryTextStyle.copyWith(
-                      fontSize: 18, fontWeight: medium),
+                // child: Text(
+                //   "${fullName}",
+                //   style: primaryTextStyle.copyWith(
+                //       fontSize: 18, fontWeight: medium),
+                // ),
+                child: TextField(
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      controller.showButton.value = true;
+                    } else {
+                      controller.showButton.value = false;
+                    }
+                  },
+                  controller: controller.namaLengkap,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "${fullName}",
+                      hintStyle: primaryTextStyle.copyWith(
+                          fontSize: 18, fontWeight: medium)),
                 ),
               ),
             ),
@@ -78,13 +91,41 @@ class ContentProfile extends GetView<ProfileController> {
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(20)),
               child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "${tanggalLahir}",
-                  style: primaryTextStyle.copyWith(
-                      fontSize: 18, fontWeight: medium),
-                ),
-              ),
+                  alignment: Alignment.centerLeft,
+                  child: TextField(
+                    onChanged: (value) {
+                      if (value.isNotEmpty) {
+                        controller.showButton.value = true;
+                      } else {
+                        controller.showButton.value = false;
+                      }
+                    },
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? date = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(1960),
+                          lastDate: DateTime.now());
+
+                      if (date != null) {
+                        controller.showButton.value = true;
+                        print(
+                            date); //pickedDate output format => 2021-03-10 00:00:00.000
+                        String getDate = DateFormat('dd-MM-yyyy').format(date);
+                        controller.tanggalLahir.value = getDate;
+                      } else {
+                        controller.showButton.value = false;
+                      }
+                    },
+                    decoration: InputDecoration(
+                        hintStyle: primaryTextStyle.copyWith(
+                            fontSize: 18, fontWeight: medium),
+                        hintText: controller.tanggalLahir.value.isEmpty
+                            ? '${tanggalLahir}'
+                            : controller.tanggalLahir.value,
+                        border: InputBorder.none),
+                  )),
             ),
           ],
         ),
@@ -118,10 +159,24 @@ class ContentProfile extends GetView<ProfileController> {
                   color: Colors.white, borderRadius: BorderRadius.circular(20)),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  "${golonganDarah}",
-                  style: primaryTextStyle.copyWith(
-                      fontSize: 18, fontWeight: medium),
+                child: DropdownSearch(
+                  // showAsSuffixIcons: false,
+                  mode: Mode.DIALOG,
+                  showClearButton: true,
+                  onChanged: (value) {
+                    if (value != null) {
+                      controller.golonganDarah.value = value.toString();
+                      controller.showButton.value = true;
+                    } else {
+                      controller.showButton.value = false;
+                    }
+                  },
+                  items: ["A", "B", "AB", "O"],
+                  dropdownSearchDecoration: InputDecoration(
+                      hintText: "${golonganDarah}",
+                      hintStyle: primaryTextStyle.copyWith(
+                          fontSize: 18, fontWeight: medium),
+                      border: InputBorder.none),
                 ),
               ),
             ),
@@ -157,10 +212,20 @@ class ContentProfile extends GetView<ProfileController> {
                   color: Colors.white, borderRadius: BorderRadius.circular(20)),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  "${user}",
-                  style: primaryTextStyle.copyWith(
-                      fontSize: 18, fontWeight: medium),
+                child: TextField(
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      controller.showButton.value = true;
+                    } else {
+                      controller.showButton.value = false;
+                    }
+                  },
+                  controller: controller.username,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "${user}",
+                      hintStyle: primaryTextStyle.copyWith(
+                          fontSize: 18, fontWeight: medium)),
                 ),
               ),
             ),
@@ -169,7 +234,7 @@ class ContentProfile extends GetView<ProfileController> {
       );
     }
 
-    Widget password() {
+    Widget telepon(telepon) {
       return Container(
         margin: EdgeInsets.only(bottom: 15),
         child: Column(
@@ -178,7 +243,7 @@ class ContentProfile extends GetView<ProfileController> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                "Password",
+                "Telepon",
                 style: primaryTextStyle.copyWith(
                     fontSize: 20, fontWeight: semiBold),
               ),
@@ -197,7 +262,7 @@ class ContentProfile extends GetView<ProfileController> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "12345",
+                  "${telepon}",
                   style: primaryTextStyle.copyWith(
                       fontSize: 18, fontWeight: medium),
                 ),
@@ -217,12 +282,18 @@ class ContentProfile extends GetView<ProfileController> {
                 primary: primaryColor,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25))),
-            onPressed: () {},
-            child: Text(
-              "Update Profile",
-              style: primaryTextStyle.copyWith(
-                  fontSize: 20, color: backgroundColor),
-            )),
+            onPressed: () {
+              controller.updateProfile();
+            },
+            child: (controller.isLoading.value)
+                ? CircularProgressIndicator(
+                    color: backgroundColor,
+                  )
+                : Text(
+                    "Update Profile",
+                    style: primaryTextStyle.copyWith(
+                        fontSize: 20, color: backgroundColor),
+                  )),
       );
     }
 
@@ -235,41 +306,44 @@ class ContentProfile extends GetView<ProfileController> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting ||
                   controller.isLoading.value) {
-                return Container(
-                  margin: EdgeInsets.only(top: 150),
-                  child: CircularProgressIndicator(
-                    color: primaryColor,
+                return Center(
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 150),
+                    padding: EdgeInsets.all(10),
+                    child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ),
                   ),
                 );
               }
               if (snapshot.hasData) {
                 Map<String, dynamic>? user = snapshot.data!.data()!;
-                print(user['username']);
-                print(user['tanggalLahir']);
-                print(user['golonganDarah']);
-                print(user['username']);
-                print(snapshot.data!);
-                return Column(
-                  children: [
-                    SizedBox(
-                      height: 25,
-                    ),
-                    fullName("${user['namaLengkap']}"),
-                    tanggalLahir("${user['tanggalLahir']}"),
-                    golonganDarah("${user['golonganDarah']}"),
-                    username("${user['username']}"),
-                    password(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    updateButton()
-                  ],
-                );
+                return Obx(() => Column(
+                      children: [
+                        SizedBox(
+                          height: 25,
+                        ),
+                        fullName("${user['namaLengkap']}"),
+                        tanggalLahir("${user['tanggalLahir']}"),
+                        golonganDarah("${user['golonganDarah']}"),
+                        username("${user['username']}"),
+                        telepon("${user['nomorTelepon']}"),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        controller.showButton.value
+                            ? updateButton()
+                            : SizedBox()
+                      ],
+                    ));
               } else {
-                return Container(
-                  margin: EdgeInsets.only(top: 200),
-                  child: CircularProgressIndicator(
-                    color: primaryColor,
+                return Center(
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 150),
+                    padding: EdgeInsets.all(10),
+                    child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ),
                   ),
                 );
               }

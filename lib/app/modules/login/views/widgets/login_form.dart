@@ -2,6 +2,7 @@ import 'package:blood_distirbution/app/modules/login/controllers/login_controlle
 import 'package:blood_distirbution/app/routes/app_pages.dart';
 import 'package:blood_distirbution/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
 class LoginForm extends GetView<LoginController> {
@@ -9,12 +10,12 @@ class LoginForm extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    Widget usernameInput() {
+    Widget emailInput() {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
-          "Username",
+          "Email",
           style: primaryTextStyle.copyWith(
-            fontSize: 20,
+            fontSize: 17,
           ),
         ),
         SizedBox(
@@ -39,7 +40,7 @@ class LoginForm extends GetView<LoginController> {
         Text(
           "Password",
           style: primaryTextStyle.copyWith(
-            fontSize: 20,
+            fontSize: 17,
           ),
         ),
         SizedBox(
@@ -70,6 +71,84 @@ class LoginForm extends GetView<LoginController> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25))),
             onPressed: () async {
+              LocationPermission permission;
+              var serviceEnabled = await Geolocator.isLocationServiceEnabled();
+              if (!serviceEnabled) {
+                Get.snackbar('', '',
+                    colorText: backgroundColor,
+                    titleText: Text(
+                      'Error',
+                      style: primaryTextStyle.copyWith(
+                          fontSize: 17,
+                          fontWeight: semiBold,
+                          color: backgroundColor),
+                    ),
+                    messageText: Text(
+                      'Akses lokasi ditolak',
+                      style: primaryTextStyle.copyWith(
+                          fontSize: 17,
+                          fontWeight: semiBold,
+                          color: backgroundColor),
+                    ),
+                    backgroundColor: primaryColor.withOpacity(0.7),
+                    snackPosition: SnackPosition.TOP,
+                    duration: Duration(seconds: 3));
+                    return Get.offAndToNamed(Routes.LOGIN);
+                // return Future.error('Location services are disabled.');
+              }
+
+              permission = await Geolocator.checkPermission();
+              if (permission == LocationPermission.denied) {
+                permission = await Geolocator.requestPermission();
+                permission = await Geolocator.requestPermission();
+                if (permission == LocationPermission.denied) {
+                  Get.snackbar('', '',
+                      colorText: backgroundColor,
+                      titleText: Text(
+                        'Error',
+                        style: primaryTextStyle.copyWith(
+                            fontSize: 17,
+                            fontWeight: semiBold,
+                            color: backgroundColor),
+                      ),
+                      messageText: Text(
+                        'Akses lokasi ditolak',
+                        style: primaryTextStyle.copyWith(
+                            fontSize: 17,
+                            fontWeight: semiBold,
+                            color: backgroundColor),
+                      ),
+                      backgroundColor: primaryColor.withOpacity(0.7),
+                      snackPosition: SnackPosition.TOP,
+                      duration: Duration(seconds: 3));
+                  return Get.offAllNamed(Routes.LOGIN);
+                  // return Future.error('Location permissions are denied');
+                }
+                controller.login();
+              }
+
+              if (permission == LocationPermission.deniedForever) {
+                Get.snackbar('', '',
+                    colorText: backgroundColor,
+                    titleText: Text(
+                      'Error',
+                      style: primaryTextStyle.copyWith(
+                          fontSize: 17,
+                          fontWeight: semiBold,
+                          color: backgroundColor),
+                    ),
+                    messageText: Text(
+                      'Akses lokasi ditolak',
+                      style: primaryTextStyle.copyWith(
+                          fontSize: 17,
+                          fontWeight: semiBold,
+                          color: backgroundColor),
+                    ),
+                    backgroundColor: primaryColor.withOpacity(0.7),
+                    snackPosition: SnackPosition.TOP,
+                    duration: Duration(seconds: 3));
+                return Get.offAllNamed(Routes.LOGIN);
+              }
               controller.login();
             },
             child: Obx(() => (controller.isLoading.value)
@@ -123,7 +202,7 @@ class LoginForm extends GetView<LoginController> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          usernameInput(),
+          emailInput(),
           SizedBox(
             height: 20,
           ),
