@@ -20,9 +20,9 @@ class ContentProfile extends GetView<ProfileController> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                "Full Name",
+                "Nama Lengkap",
                 style: primaryTextStyle.copyWith(
-                    fontSize: 20, fontWeight: semiBold),
+                    fontSize: 16, fontWeight: semiBold),
               ),
             ),
             SizedBox(
@@ -76,7 +76,7 @@ class ContentProfile extends GetView<ProfileController> {
               child: Text(
                 "Tanggal Lahir",
                 style: primaryTextStyle.copyWith(
-                    fontSize: 20, fontWeight: semiBold),
+                    fontSize: 16, fontWeight: semiBold),
               ),
             ),
             SizedBox(
@@ -143,7 +143,7 @@ class ContentProfile extends GetView<ProfileController> {
               child: Text(
                 "Golongan Darah",
                 style: primaryTextStyle.copyWith(
-                    fontSize: 20, fontWeight: semiBold),
+                    fontSize: 16, fontWeight: semiBold),
               ),
             ),
             SizedBox(
@@ -196,7 +196,7 @@ class ContentProfile extends GetView<ProfileController> {
               child: Text(
                 "Username",
                 style: primaryTextStyle.copyWith(
-                    fontSize: 20, fontWeight: semiBold),
+                    fontSize: 16, fontWeight: semiBold),
               ),
             ),
             SizedBox(
@@ -245,7 +245,7 @@ class ContentProfile extends GetView<ProfileController> {
               child: Text(
                 "Telepon",
                 style: primaryTextStyle.copyWith(
-                    fontSize: 20, fontWeight: semiBold),
+                    fontSize: 16, fontWeight: semiBold),
               ),
             ),
             SizedBox(

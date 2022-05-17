@@ -32,7 +32,7 @@ class ProfileView extends GetView<ProfileController> {
                   child: Text(
                     "PROFILE",
                     style: primaryTextStyle.copyWith(
-                        fontSize: 27, fontWeight: extraBold),
+                        fontSize: 24, fontWeight: extraBold),
                   ),
                 ),
               ),

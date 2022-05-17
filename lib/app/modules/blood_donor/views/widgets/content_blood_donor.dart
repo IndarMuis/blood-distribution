@@ -146,9 +146,10 @@ class ContentBloodDonor extends GetView<BloodDonorController> {
                                           GestureDetector(
                                             onTap: () {
                                               MapsLauncher.launchCoordinates(
-                                                  data['latitude'],
-                                                  data['longitude']);
+                                                  data['lokasi']['latitude'],
+                                                  data['lokasi']['longitude']);
                                             },
+                                            
                                             child: Container(
                                               margin: EdgeInsets.only(
                                                   left: defaultMargin,

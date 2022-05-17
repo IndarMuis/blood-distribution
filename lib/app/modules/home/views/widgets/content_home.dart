@@ -22,17 +22,16 @@ class ContentHome extends StatelessWidget {
             children: [
               GestureDetector(
                   onTap: () async {
-                  LocationPermission permission =
-                      await Geolocator.checkPermission();
-                  if (permission == LocationPermission.denied ||
-                      permission == LocationPermission.deniedForever) {
-                    LocationPermission asked =
-                        await Geolocator.requestPermission();
-                    print("Permission not given");
-                  } else {
-                    
-                    Get.toNamed(Routes.BLOOD_DONOR);
-                  }
+                    LocationPermission permission =
+                        await Geolocator.checkPermission();
+                    if (permission == LocationPermission.denied ||
+                        permission == LocationPermission.deniedForever) {
+                      LocationPermission asked =
+                          await Geolocator.requestPermission();
+                      print("Permission not given");
+                    } else {
+                      Get.toNamed(Routes.BLOOD_DONOR);
+                    }
                   },
                   child: CardMenu(
                     menuName: "Blood Donors",
